@@ -1,0 +1,26 @@
+# data type
+# text => free text 
+# bool => true, false
+# url => url format
+# json => raw byte
+# int8 => uint8
+# int16 => int16
+# int32 => int32
+# int64 => int64
+name: users
+type: mysql_gorm
+fields:
+  - name: fullname
+    type: text
+    validate: 'required' #https://github.com/go-playground/validator 
+    comment: 'fullname of user'
+  - name: age
+    type: int16
+    validate: 'gte=1,lte=200' #https://github.com/go-playground/validator 
+  - name: email
+    type: email
+    validate: 'required,email' #https://github.com/go-playground/validator 
+  - name: sex
+    type: bool
+    comment: 'true:male,false:female'    
+

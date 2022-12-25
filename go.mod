@@ -2,7 +2,10 @@ module github.com/hongminhcbg/gocrud
 
 go 1.19
 
-require github.com/urfave/cli/v3 v3.0.0-alpha
+require (
+	github.com/urfave/cli/v3 v3.0.0-alpha
+	gopkg.in/yaml.v2 v2.4.0
+)
 
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect

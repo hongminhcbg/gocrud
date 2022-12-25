@@ -17,9 +17,11 @@ fields:
   - name: age
     type: int16
     validate: 'gte=1,lte=200' #https://github.com/go-playground/validator 
+    comment: 'age'
   - name: email
     type: email
     validate: 'required,email' #https://github.com/go-playground/validator 
+    comment: 'age'
   - name: sex
     type: bool
     comment: 'true:male,false:female'    

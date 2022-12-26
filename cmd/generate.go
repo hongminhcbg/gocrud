@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/hongminhcbg/gocrud/fields"
 	"github.com/hongminhcbg/gocrud/str"
@@ -39,7 +40,31 @@ func generate(ctx *cli.Context) error {
 
 	fieldList := make([]fields.IField, 0, len(c.Fields))
 	for i := 0; i < len(c.Fields); i++ {
-		fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name))
+		if strings.EqualFold(c.Fields[i].Type, "text") {
+			fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name, c.Fields[i].Comment))
+			continue
+		}
+
+		if strings.EqualFold(c.Fields[i].Type, "int8") {
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int8))
+			continue
+		}
+
+		if strings.EqualFold(c.Fields[i].Type, "int16") {
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int16))
+			continue
+		}
+
+		if strings.EqualFold(c.Fields[i].Type, "int32") {
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int32))
+			continue
+		}
+
+		if strings.EqualFold(c.Fields[i].Type, "int64") {
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int64))
+			continue
+		}
+
 	}
 
 	stru := str.NewStruct(c.Name, fieldList)

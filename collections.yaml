@@ -25,4 +25,7 @@ fields:
   - name: sex
     type: bool
     comment: 'true:male,false:female'    
+  - name: account_balance
+    type: int64
+    comment: 'total money'    
 

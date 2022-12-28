@@ -65,6 +65,10 @@ func generate(ctx *cli.Context) error {
 			continue
 		}
 
+		if strings.EqualFold(c.Fields[i].Type, "bool") {
+			fieldList = append(fieldList, fields.NewBoolField(c.Fields[i].Name, c.Fields[i].Comment))
+		}
+
 	}
 
 	stru := str.NewStruct(c.Name, fieldList)

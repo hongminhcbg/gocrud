@@ -14,14 +14,17 @@ fields:
     type: text
     validate: 'required' #https://github.com/go-playground/validator 
     comment: 'fullname of user'
+    sql_hint: 'type=BIGINT(20),key=candidate,is_not_null=true, xxx'
   - name: age
     type: int16
     validate: 'gte=1,lte=200' #https://github.com/go-playground/validator 
     comment: 'age'
+    sql_hint: 'type=INT(10),key=candidate,is_not_null=true,default=18'
   - name: email
-    type: email
+    type: text
     validate: 'required,email' #https://github.com/go-playground/validator 
-    comment: 'age'
+    comment: 'email'
+    sql_hint: 'type=VARCHAR(64),key=unique,is_not_null=true'
   - name: sex
     type: bool
     comment: 'true:male,false:female'    

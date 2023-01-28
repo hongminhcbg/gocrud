@@ -16,6 +16,7 @@ type Field struct {
 	Type     string `yaml:"type"`
 	Validate string `yaml:"validate,omitempty"`
 	Comment  string `yaml:"comment"`
+	SqlHint  string `yaml:"sql_hint"`
 }
 
 type Collection struct {

@@ -14,6 +14,7 @@ fields:
     type: text
     validate: 'required' #https://github.com/go-playground/validator 
     comment: 'fullname of user'
+    sql_hint: 'type=bigint(20),key=PRI,null=NO'
   - name: age
     type: int16
     validate: 'gte=1,lte=200' #https://github.com/go-playground/validator 

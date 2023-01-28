@@ -24,6 +24,10 @@ func (s *_string) Name() string {
 	return s.nameCamelCase
 }
 
+func (s *_string) NameSnake() string {
+	return s.nameSnakeCase
+}
+
 func (s *_string) DataType() string {
 	return "string"
 }

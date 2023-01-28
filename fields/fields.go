@@ -5,4 +5,5 @@ type IField interface {
 	DataType() string
 	Annotation() string
 	Comment() string
+	NameSnake() string
 }

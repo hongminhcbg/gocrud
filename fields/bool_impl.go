@@ -23,6 +23,11 @@ func NewBoolField(snakeCase, comment string) IField {
 func (b *_bool) Name() string {
 	return b.camelCase
 }
+
+func (b *_bool) NameSnake() string {
+	return b.snakeCase
+}
+
 func (b *_bool) DataType() string {
 	return "bool"
 }

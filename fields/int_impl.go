@@ -35,6 +35,10 @@ func (i *_int) Name() string {
 	return i.camelCase
 }
 
+func (i *_int) NameSnake() string {
+	return i.snakeCase
+}
+
 func (i *_int) DataType() string {
 	switch i.t {
 	case Int8:

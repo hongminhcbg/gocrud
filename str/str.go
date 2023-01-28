@@ -15,6 +15,12 @@ type Struct struct {
 	Name      string
 }
 
+type sqlOpts struct {
+	dataType   string
+	null       bool
+	defaultVal string
+}
+
 func NewStruct(name string, fields []fields.IField) *Struct {
 	return &Struct{
 		NameSnake: utils.SnakeToCamel(name),
@@ -39,4 +45,14 @@ func (s *Struct) GenModelFile() error {
 	ans.WriteString("}\n")
 	_, err = ans.WriteString(fmt.Sprintf("func (%s) TableName() string {\n  return \"%s\"\n}", s.NameSnake, strings.ToLower(s.NameSnake)))
 	return os.WriteFile(fmt.Sprintf("%s_model.go", s.Name), []byte(ans.String()), 0644)
+}
+
+func (s *Struct) GenMigrateFile() error {
+	ans := new(strings.Builder)
+	ans.WriteString(fmt.Sprintf("CREATE TABLE `%s`(\n", s.Name))
+	return os.WriteFile(fmt.Sprintf("%s_migrate.sql", s.Name), []byte(ans.String()), 0644)
+}
+
+func GenSQL(f fields.IField) string {
+	return ""
 }

@@ -1,6 +1,11 @@
 package utils
 
-import "strings"
+import (
+	"log"
+	"strings"
+
+	"github.com/hongminhcbg/gocrud/models"
+)
 
 func SnakeToCamel(snake string) string {
 	var b strings.Builder
@@ -52,4 +57,44 @@ func CamelToSnake(camel string) (snake string) {
 		b.WriteRune(v + diff)
 	}
 	return b.String()
+}
+
+func ParseSqlHint(in string) *models.SqlHint {
+	ans := new(models.SqlHint)
+	args := strings.Split(in, ",")
+	for _, kv := range args {
+		keyVal := strings.Split(kv, "=")
+		if len(keyVal) != 2 {
+			log.Printf("invalid sql hint format %s, ignore", kv)
+			continue
+		}
+
+		switch strings.ToLower(keyVal[0]) {
+		case "type":
+			ans.DataType = strings.TrimSpace(keyVal[1])
+		case "default":
+			ans.DefaultVal = strings.TrimSpace(keyVal[1])
+		case "is_not_null":
+			{
+				if keyVal[1] == "true" {
+					ans.IsNotNull = true
+				}
+			}
+		case "key":
+			{
+				switch keyVal[1] {
+				case "primary":
+					ans.KeyType = models.SqlKeyType_PRIMARY
+				case "candidate":
+					ans.KeyType = models.SqlKeyType_CANDIDATE
+				case "unique":
+					ans.KeyType = models.SqlKeyType_UNIQUE
+				default:
+					log.Println("SQL hint key type must in list ['primary', 'candidate', 'unique', '']")
+				}
+			}
+		}
+
+	}
+	return ans
 }

@@ -15,12 +15,6 @@ type Struct struct {
 	Name      string
 }
 
-type sqlOpts struct {
-	dataType   string
-	null       bool
-	defaultVal string
-}
-
 func NewStruct(name string, fields []fields.IField) *Struct {
 	return &Struct{
 		NameSnake: utils.SnakeToCamel(name),
@@ -44,13 +38,28 @@ func (s *Struct) GenModelFile() error {
 
 	ans.WriteString("}\n")
 	_, err = ans.WriteString(fmt.Sprintf("func (%s) TableName() string {\n  return \"%s\"\n}", s.NameSnake, strings.ToLower(s.NameSnake)))
-	return os.WriteFile(fmt.Sprintf("%s_model.go", s.Name), []byte(ans.String()), 0644)
+	fileName := fmt.Sprintf("%s_model.go", s.Name)
+	os.Remove(fileName)
+	return os.WriteFile(fileName, []byte(ans.String()), 0644)
 }
 
 func (s *Struct) GenMigrateFile() error {
+	if len(s.Fields) == 0 {
+		return nil
+	}
+
 	ans := new(strings.Builder)
 	ans.WriteString(fmt.Sprintf("CREATE TABLE `%s`(\n", s.Name))
-	return os.WriteFile(fmt.Sprintf("%s_migrate.sql", s.Name), []byte(ans.String()), 0644)
+	for i := 0; i < len(s.Fields)-1; i++ {
+		ans.WriteString(fmt.Sprintf("\t%s,\n", s.Fields[i].GenSql()))
+	}
+
+	ans.WriteString(fmt.Sprintf("\t%s\n", s.Fields[len(s.Fields)-1].GenSql()))
+	ans.WriteString(fmt.Sprintf(") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT '%s'; ", s.Name))
+	//log.Println("migrate with ", ans.String())
+	fileName := fmt.Sprintf("%s_migrate.sql", s.Name)
+	os.Remove(fileName)
+	return os.WriteFile(fileName, []byte(ans.String()), 0644)
 }
 
 func GenSQL(f fields.IField) string {

@@ -6,4 +6,5 @@ type IField interface {
 	Annotation() string
 	Comment() string
 	NameSnake() string
+	GenSql() string
 }

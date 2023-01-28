@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/hongminhcbg/gocrud/fields"
 	"github.com/hongminhcbg/gocrud/str"
+	"github.com/hongminhcbg/gocrud/utils"
 	"github.com/urfave/cli/v3"
 	"gopkg.in/yaml.v2"
 )
@@ -41,37 +44,58 @@ func generate(ctx *cli.Context) error {
 
 	fieldList := make([]fields.IField, 0, len(c.Fields))
 	for i := 0; i < len(c.Fields); i++ {
+		sqlHint := utils.ParseSqlHint(c.Fields[i].SqlHint)
+		fmt.Println("parse sql hint", c.Fields[i].SqlHint, " output is ", sqlHint)
 		if strings.EqualFold(c.Fields[i].Type, "text") {
-			fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name, c.Fields[i].Comment))
+			fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name, c.Fields[i].Comment, sqlHint))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int8") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int8))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int8, sqlHint))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int16") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int16))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int16, sqlHint))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int32") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int32))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int32, sqlHint))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int64") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int64))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int64, sqlHint))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "bool") {
-			fieldList = append(fieldList, fields.NewBoolField(c.Fields[i].Name, c.Fields[i].Comment))
+			fieldList = append(fieldList, fields.NewBoolField(c.Fields[i].Name, c.Fields[i].Comment, sqlHint))
 		}
 
 	}
 
 	stru := str.NewStruct(c.Name, fieldList)
-	return stru.GenModelFile()
+	wg := new(sync.WaitGroup)
+	wg.Add(2)
+	go func() {
+		err := stru.GenModelFile()
+		if err != nil {
+			log.Println(err)
+		}
+		wg.Done()
+	}()
+
+	go func() {
+		err := stru.GenMigrateFile()
+		if err != nil {
+			log.Println(err)
+		}
+		wg.Done()
+	}()
+
+	wg.Wait()
+	return nil
 }

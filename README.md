@@ -31,4 +31,5 @@ III. Usage
 
 - [ ] Support datetime type 
 - [ ] Support Email type
+- [ ] Support JSON type
 - [ ] Intergrate https://github.com/go-playground/validator

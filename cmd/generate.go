@@ -79,7 +79,7 @@ func generate(ctx *cli.Context) error {
 
 	stru := str.NewStruct(c.Name, fieldList)
 	wg := new(sync.WaitGroup)
-	wg.Add(2)
+	wg.Add(3)
 	go func() {
 		err := stru.GenModelFile()
 		if err != nil {
@@ -90,6 +90,13 @@ func generate(ctx *cli.Context) error {
 
 	go func() {
 		err := stru.GenMigrateFile()
+		if err != nil {
+			log.Println(err)
+		}
+		wg.Done()
+	}()
+	go func() {
+		err := stru.GenStoreFile()
 		if err != nil {
 			log.Println(err)
 		}

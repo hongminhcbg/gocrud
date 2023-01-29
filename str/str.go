@@ -10,14 +10,14 @@ import (
 )
 
 type Struct struct {
-	NameSnake string
+	NameCamel string
 	Fields    []fields.IField
 	Name      string
 }
 
 func NewStruct(name string, fields []fields.IField) *Struct {
 	return &Struct{
-		NameSnake: utils.SnakeToCamel(name),
+		NameCamel: utils.SnakeToCamel(name),
 		Name:      name,
 		Fields:    fields,
 	}
@@ -25,7 +25,7 @@ func NewStruct(name string, fields []fields.IField) *Struct {
 
 func (s *Struct) GenModelFile() error {
 	ans := new(strings.Builder)
-	_, err := ans.WriteString(fmt.Sprintf("package YOUR_PACKAGE_HERE\ntype %s struct {\n", s.NameSnake))
+	_, err := ans.WriteString(fmt.Sprintf("package main\ntype %s struct {\n", s.NameCamel))
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func (s *Struct) GenModelFile() error {
 	}
 
 	ans.WriteString("}\n")
-	_, err = ans.WriteString(fmt.Sprintf("func (%s) TableName() string {\n  return \"%s\"\n}", s.NameSnake, strings.ToLower(s.NameSnake)))
+	_, err = ans.WriteString(fmt.Sprintf("func (%s) TableName() string {\n  return \"%s\"\n}", s.NameCamel, strings.ToLower(s.NameCamel)))
 	fileName := fmt.Sprintf("%s_model.go", s.Name)
 	os.Remove(fileName)
 	return os.WriteFile(fileName, []byte(ans.String()), 0644)
@@ -62,6 +62,38 @@ func (s *Struct) GenMigrateFile() error {
 	return os.WriteFile(fileName, []byte(ans.String()), 0644)
 }
 
-func GenSQL(f fields.IField) string {
-	return ""
+var formatStore = `
+package main
+
+import (
+	"context"
+
+	"gorm.io/gorm"
+)
+
+type %sStore struct {
+	*gorm.DB
+}
+
+func new%sStore(db *gorm.DB) *%sStore {
+	return &%sStore{db}
+}
+
+func (s *%sStore) Create(ctx context.Context, r *%s) error {
+	return s.DB.WithContext(ctx).Create(r).Error
+}
+
+func (s *%sStore) Save(ctx context.Context, r *%s) error {
+	return s.DB.WithContext(ctx).Save(r).Error
+}
+	`
+
+func (s *Struct) GenStoreFile() error {
+	ans := new(strings.Builder)
+	header := fmt.Sprintf(formatStore, s.NameCamel, s.NameCamel, s.NameCamel, s.NameCamel, s.NameCamel, s.NameCamel, s.NameCamel, s.NameCamel)
+	ans.WriteString(header)
+
+	fileName := fmt.Sprintf("%s_store.go", s.Name)
+	os.Remove(fileName)
+	return os.WriteFile(fileName, []byte(ans.String()), 0644)
 }

@@ -23,9 +23,10 @@ type _int struct {
 	comment   string
 	t         IntType
 	sqlHint   *models.SqlHint
+	validate  string
 }
 
-func NewInt(snakeCase string, comment string, t IntType, sqlHint *models.SqlHint) IField {
+func NewInt(snakeCase string, comment string, t IntType, sqlHint *models.SqlHint, validate string) IField {
 	if sqlHint == nil {
 		sqlHint = new(models.SqlHint)
 	}
@@ -36,6 +37,7 @@ func NewInt(snakeCase string, comment string, t IntType, sqlHint *models.SqlHint
 		comment:   comment,
 		t:         t,
 		sqlHint:   sqlHint,
+		validate:  validate,
 	}
 }
 
@@ -63,7 +65,12 @@ func (i *_int) DataType() string {
 }
 
 func (i *_int) Annotation() string {
-	return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\"`", i.snakeCase, i.snakeCase)
+	if i.validate == "" {
+		return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\"`", i.snakeCase, i.snakeCase)
+	}
+
+	return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\" validate:\"%s\"`", i.snakeCase, i.snakeCase, i.validate)
+
 }
 
 func (i *_int) Comment() string {

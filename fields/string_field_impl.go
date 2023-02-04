@@ -13,9 +13,10 @@ type _string struct {
 	nameCamelCase string
 	comment       string
 	sqlHint       *models.SqlHint
+	vaidate       string
 }
 
-func NewFieldString(name, comment string, sqlHint *models.SqlHint) IField {
+func NewFieldString(name, comment string, sqlHint *models.SqlHint, validate string) IField {
 	if sqlHint == nil {
 		sqlHint = new(models.SqlHint)
 	}
@@ -25,6 +26,7 @@ func NewFieldString(name, comment string, sqlHint *models.SqlHint) IField {
 		nameCamelCase: utils.SnakeToCamel(name),
 		comment:       comment,
 		sqlHint:       sqlHint,
+		vaidate:       validate,
 	}
 }
 
@@ -41,7 +43,11 @@ func (s *_string) DataType() string {
 }
 
 func (s *_string) Annotation() string {
-	return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\"`", s.nameSnakeCase, s.nameSnakeCase)
+	if s.vaidate == "" {
+		return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\"`", s.nameSnakeCase, s.nameSnakeCase)
+	}
+
+	return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\" validate:\"%s\"`", s.nameSnakeCase, s.nameSnakeCase, s.vaidate)
 }
 
 func (s *_string) Comment() string {

@@ -17,9 +17,9 @@ II. Install
 
     $ cd gocrud && go mod tidy
 
-    $ go build -o gocrud cmd/*
+    $ make build 
 
-    $ sudo mv gocurd /usr/local/bin
+    $ make install 
 
 III. Usage
 
@@ -32,4 +32,4 @@ III. Usage
 - [ ] Support datetime type 
 - [ ] Support Email type
 - [ ] Support JSON type
-- [ ] Intergrate https://github.com/go-playground/validator
+- [OK] Intergrate https://github.com/go-playground/validator

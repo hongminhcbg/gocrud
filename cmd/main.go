@@ -34,6 +34,11 @@ func main() {
 				},
 			},
 		},
+		{
+			Name:   "version",
+			Usage:  "Show  app version",
+			Action: version,
+		},
 	}
 
 	app.Run(os.Args)

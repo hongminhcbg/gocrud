@@ -1,6 +1,16 @@
 package tmpl
 
-import "time"
+import (
+	"time"
+
+	"github.com/go-playground/validator/v10"
+)
+
+var userValidate *validator.Validate
+
+func init() {
+	userValidate = validator.New()
+}
 
 // template for struct
 
@@ -17,4 +27,8 @@ type User struct {
 
 func (User) TableName() string {
 	return "users"
+}
+
+func (m *User) Validate() error {
+	return userValidate.Struct(m)
 }

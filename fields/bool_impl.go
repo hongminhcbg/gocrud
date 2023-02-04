@@ -13,9 +13,10 @@ type _bool struct {
 	camelCase string
 	comment   string
 	sqlHint   *models.SqlHint
+	validate  string
 }
 
-func NewBoolField(snakeCase, comment string, sqlHint *models.SqlHint) IField {
+func NewBoolField(snakeCase, comment string, sqlHint *models.SqlHint, validate string) IField {
 	if sqlHint == nil {
 		sqlHint = new(models.SqlHint)
 	}
@@ -25,6 +26,7 @@ func NewBoolField(snakeCase, comment string, sqlHint *models.SqlHint) IField {
 		camelCase: utils.SnakeToCamel(snakeCase),
 		comment:   comment,
 		sqlHint:   sqlHint,
+		validate:  validate,
 	}
 }
 
@@ -41,7 +43,11 @@ func (b *_bool) DataType() string {
 }
 
 func (b *_bool) Annotation() string {
-	return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\"`", b.snakeCase, b.snakeCase)
+	if b.validate == "" {
+		return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\"`", b.snakeCase, b.snakeCase)
+	}
+
+	return fmt.Sprintf("`gorm:\"column:%s\" json:\"%s,omitempty\" validate:\"%s\"`", b.snakeCase, b.snakeCase, b.validate)
 }
 
 func (b *_bool) Comment() string {

@@ -47,34 +47,33 @@ func generate(ctx *cli.Context) error {
 		sqlHint := utils.ParseSqlHint(c.Fields[i].SqlHint)
 		fmt.Println("parse sql hint", c.Fields[i].SqlHint, " output is ", sqlHint)
 		if strings.EqualFold(c.Fields[i].Type, "text") {
-			fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name, c.Fields[i].Comment, sqlHint))
+			fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name, c.Fields[i].Comment, sqlHint, c.Fields[i].Validate))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int8") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int8, sqlHint))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int8, sqlHint, c.Fields[i].Validate))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int16") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int16, sqlHint))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int16, sqlHint, c.Fields[i].Validate))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int32") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int32, sqlHint))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int32, sqlHint, c.Fields[i].Validate))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "int64") {
-			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int64, sqlHint))
+			fieldList = append(fieldList, fields.NewInt(c.Fields[i].Name, c.Fields[i].Comment, fields.Int64, sqlHint, c.Fields[i].Validate))
 			continue
 		}
 
 		if strings.EqualFold(c.Fields[i].Type, "bool") {
-			fieldList = append(fieldList, fields.NewBoolField(c.Fields[i].Name, c.Fields[i].Comment, sqlHint))
+			fieldList = append(fieldList, fields.NewBoolField(c.Fields[i].Name, c.Fields[i].Comment, sqlHint, c.Fields[i].Validate))
 		}
-
 	}
 
 	stru := str.NewStruct(c.Name, fieldList)

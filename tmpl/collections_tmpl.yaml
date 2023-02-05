@@ -1,12 +1,3 @@
-package main
-
-import (
-	"os"
-
-	"github.com/urfave/cli/v3"
-)
-
-const rawInit = `
 # data_type
 #   text => free text 
 #   bool => true, false
@@ -42,8 +33,4 @@ fields:
   - name: raw
     type: json
     comment: 'raw  json fo user'
-`
 
-func initCmd(ctx *cli.Context) error {
-	return os.WriteFile("collections.yaml", []byte(rawInit), 0644)
-}

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/urfave/cli/v3"
@@ -11,7 +10,6 @@ var app = new(cli.App)
 var fileInput string
 
 func main() {
-	fmt.Println(os.Args)
 	app.Commands = []*cli.Command{
 		{
 			Name:        "init",

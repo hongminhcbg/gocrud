@@ -61,6 +61,10 @@ func CamelToSnake(camel string) (snake string) {
 
 func ParseSqlHint(in string) *models.SqlHint {
 	ans := new(models.SqlHint)
+	if in == "" {
+		return ans
+	}
+
 	args := strings.Split(in, ",")
 	for _, kv := range args {
 		keyVal := strings.Split(kv, "=")

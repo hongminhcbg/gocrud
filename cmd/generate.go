@@ -45,7 +45,7 @@ func generate(ctx *cli.Context) error {
 	fieldList := make([]fields.IField, 0, len(c.Fields))
 	for i := 0; i < len(c.Fields); i++ {
 		sqlHint := utils.ParseSqlHint(c.Fields[i].SqlHint)
-		fmt.Println("parse sql hint", c.Fields[i].SqlHint, " output is ", sqlHint)
+		fmt.Println("parse sql hint", " fieldName:", c.Fields[i].Name, " hint:", c.Fields[i].SqlHint, " output is ", sqlHint)
 		if strings.EqualFold(c.Fields[i].Type, "text") {
 			fieldList = append(fieldList, fields.NewFieldString(c.Fields[i].Name, c.Fields[i].Comment, sqlHint, c.Fields[i].Validate))
 			continue
@@ -73,6 +73,10 @@ func generate(ctx *cli.Context) error {
 
 		if strings.EqualFold(c.Fields[i].Type, "bool") {
 			fieldList = append(fieldList, fields.NewBoolField(c.Fields[i].Name, c.Fields[i].Comment, sqlHint, c.Fields[i].Validate))
+		}
+
+		if strings.EqualFold(c.Fields[i].Type, "json") {
+			fieldList = append(fieldList, fields.NewJsonFileld(c.Fields[i].Name, c.Fields[i].Comment, c.Fields[i].Validate, sqlHint))
 		}
 	}
 

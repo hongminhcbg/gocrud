@@ -20,6 +20,8 @@ vendor/
 # Go workspace file
 go.work
 main
+gocrud
 collections.yaml
 *_model.go
 *_migrate.sql
+*_store.go

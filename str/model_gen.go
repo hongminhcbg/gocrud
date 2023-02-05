@@ -11,6 +11,7 @@ package main
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/go-gorm/datatypes"
 )
 
 var %sValidate *validator.Validate
